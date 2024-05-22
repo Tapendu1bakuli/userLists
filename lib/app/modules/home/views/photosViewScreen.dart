@@ -20,76 +20,96 @@ class PhotosViewScreen extends GetView<UserListViewController> {
         await controller.fetchPhotos(data[0]);
       });
     }, builder: (_) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: const Text("Photos view"),
-      ),
-      body: controller.isLoading.value?const Center(child: CircularProgressIndicator(),):Padding(
-        padding: EdgeInsets.symmetric(horizontal: ScreenConstant.defaultWidthTen),
-        child: ListView(
-          children: [
-            ListView.separated(
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: controller.photosList.length,
-              itemBuilder: (context, i) {
-                return InkWell(
-                  onTap: (){
-                  },
-                  child: Container(height:ScreenConstant.defaultHeightEightyTwo,
-                      child: Image.network(controller.photosList[i].thumbnailUrl ?? "")),
-                );
-              }, separatorBuilder: (BuildContext context, int index) { return Container(height: ScreenConstant.defaultHeightFifteen,); },
-            ),
-            Container(height: ScreenConstant.defaultHeightTen,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                controller
-                    .temporaryDocImagePath.value.isEmpty
-                    ? ElevatedButton(
-                    onPressed: ()async{
-                      await modalBottomSheetMenuForCamera(context,(XFile? selectedImage){
-                        controller.temporaryDocImageName.value = selectedImage!.name;
-                        controller.temporaryDocImagePath.value = selectedImage!.path;
-                      });
-                    }, child:const Text("Add new album")):ElevatedButton(
-                    onPressed: (){
-                      controller
-                          .temporaryDocImagePath
-                          .value = "";
-                    }, child:const Text("Delete")),
-                ElevatedButton(onPressed: (){showDialogForChooseImage("Delete");}, child:const Text("Delete album")),
-              ],
-            ),
-            Container(height: ScreenConstant.defaultHeightFifteen,),
-            controller
-                .temporaryDocImagePath
-                .value.isEmpty?const Offstage():Center(
-              child: ClipRRect(
-                borderRadius:
-                BorderRadius.circular(20),
-                child: Container(
-                  height: ScreenConstant
-                      .defaultHeightTwoHundred,
-                  width: ScreenConstant
-                      .defaultWidthOneEighty,
-                  child: Image.file(
-                    fit: BoxFit.fill,
-                    File(controller
-                        .temporaryDocImagePath
-                        .value),
-                  ),
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: const Text("Photos view"),
+        ),
+        body: controller.isLoading.value
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: ScreenConstant.defaultWidthTen),
+                child: ListView(
+                  children: [
+                    ListView.separated(
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: controller.photosList.length,
+                      itemBuilder: (context, i) {
+                        return SizedBox(
+                            height: ScreenConstant.defaultHeightEightyTwo,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                    flex: 6,
+                                    child: Image.network(
+                                        controller.photosList[i].thumbnailUrl ??
+                                            "",fit: BoxFit.fill,)),
+                                Expanded(
+                                    flex: 4,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          showDialogForChooseImage("Delete", i);
+                                        },
+                                        child: const Text("Delete album"))),
+                              ],
+                            ));
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Container(
+                          height: ScreenConstant.defaultHeightFifteen,
+                        );
+                      },
+                    ),
+                    Container(
+                      height: ScreenConstant.defaultHeightTen,
+                    ),
+                    controller.temporaryDocImagePath.value.isEmpty
+                        ? ElevatedButton(
+                            onPressed: () async {
+                              await modalBottomSheetMenuForCamera(context,
+                                  (XFile? selectedImage) {
+                                controller.temporaryDocImageName.value =
+                                    selectedImage!.name;
+                                controller.temporaryDocImagePath.value =
+                                    selectedImage!.path;
+                              });
+                            },
+                            child: const Text("Add new album"))
+                        : ElevatedButton(
+                            onPressed: () {
+                              controller.temporaryDocImagePath.value = "";
+                            },
+                            child: const Text("Delete")),
+                    Container(
+                      height: ScreenConstant.defaultHeightFifteen,
+                    ),
+                    controller.temporaryDocImagePath.value.isEmpty
+                        ? const Offstage()
+                        : Center(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                height: ScreenConstant.defaultHeightTwoHundred,
+                                width: ScreenConstant.defaultWidthOneEighty,
+                                child: Image.file(
+                                  fit: BoxFit.fill,
+                                  File(controller.temporaryDocImagePath.value),
+                                ),
+                              ),
+                            ),
+                          )
+                  ],
                 ),
               ),
-            )
-          ],
-        ),
-      ),
-    );
+      );
     });
   }
+
   showAlertDialogForLogOut(String title) {
     Get.dialog(
       barrierDismissible: false,
@@ -103,26 +123,51 @@ class PhotosViewScreen extends GetView<UserListViewController> {
           builder: (context) {
             return Container(
               height: ScreenConstant.screenHeightThird,
-              width: MediaQuery.of(context).size.width-80,
-              padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightTen,horizontal: ScreenConstant.defaultWidthThirty),
-
+              width: MediaQuery.of(context).size.width - 80,
+              padding: EdgeInsets.symmetric(
+                  vertical: ScreenConstant.defaultHeightTen,
+                  horizontal: ScreenConstant.defaultWidthThirty),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text(title,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 20,fontWeight: FontWeight.w500),),
-                  Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text("Are you sure?",style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
-                  Container(height: ScreenConstant.defaultHeightTen,),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  Text(
+                    title,
+                    style: TextStyles.homeTabSecondCardSubTitleStyleBold
+                        .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  Text(
+                    "Are you sure?",
+                    style: TextStyles.homeTabSecondCardSubTitleStyleBold
+                        .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightTen,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Confirm"),)
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: const Text("Confirm"),
+                      )
                     ],
                   ),
-
                 ],
               ),
             );
@@ -131,7 +176,8 @@ class PhotosViewScreen extends GetView<UserListViewController> {
       ),
     );
   }
-  showDialogForChooseImage(String title) {
+
+  showDialogForChooseImage(String title, int id) {
     Get.dialog(
       barrierDismissible: false,
       AlertDialog(
@@ -144,26 +190,52 @@ class PhotosViewScreen extends GetView<UserListViewController> {
           builder: (context) {
             return Container(
               height: ScreenConstant.screenHeightThird,
-              width: MediaQuery.of(context).size.width-80,
-              padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightTen,horizontal: ScreenConstant.defaultWidthThirty),
-
+              width: MediaQuery.of(context).size.width - 80,
+              padding: EdgeInsets.symmetric(
+                  vertical: ScreenConstant.defaultHeightTen,
+                  horizontal: ScreenConstant.defaultWidthThirty),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text(title,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 20,fontWeight: FontWeight.w500),),
-                  Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text("Are you sure?",style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
-                  Container(height: ScreenConstant.defaultHeightTen,),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  Text(
+                    title,
+                    style: TextStyles.homeTabSecondCardSubTitleStyleBold
+                        .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  Text(
+                    "Are you sure?",
+                    style: TextStyles.homeTabSecondCardSubTitleStyleBold
+                        .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightTen,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Confirm"),)
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                          controller.photosList.removeAt(id);
+                        },
+                        child: const Text("Confirm"),
+                      )
                     ],
                   ),
-
                 ],
               ),
             );

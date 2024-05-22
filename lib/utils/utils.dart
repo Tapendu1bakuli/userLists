@@ -363,7 +363,7 @@ verificationDialog() {
                     padding: ScreenConstant.spacingAllExtraSmall,
                     ontap: () {
                       Get.back();
-                      Get.toNamed(Routes.VALIDATEUSERVIEW);
+                      // Get.toNamed(Routes.VALIDATEUSERVIEW);
                       // authenticateReferralCode(
                       //     referralText.text);
                     },

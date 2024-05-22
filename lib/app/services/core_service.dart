@@ -207,7 +207,7 @@ class CoreService {
             } on Exception {
               debugPrint(
                   "Exception block : Try again or revisit the screen. ${response.body}");
-              Get.offAllNamed(Routes.LOGIN);
+              // Get.offAllNamed(Routes.LOGIN);
               Get.back();
               Fluttertoast.showToast(
                   msg: "Something went wrong",

@@ -37,17 +37,25 @@ class UserListViewScreen extends GetView<UserListViewController> {
               shrinkWrap: true,
               itemCount: controller.userList.length,
               itemBuilder: (context, i) {
-                return InkWell(
-                  onTap: (){
-                    Get.to(const AlbumViewScreen(),arguments: [controller.userList[i].id]);
-                  },
-                  child: Card(
-                    elevation: 10,
-                    child: Center(child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightFifteen),
-                      child: Text(controller.userList[i].name ?? ""),
-                    )),
-                  ),
+                return Row(
+                  children: [
+                    Expanded(
+                      flex:6,
+                      child: InkWell(
+                        onTap: (){
+                          Get.to(const AlbumViewScreen(),arguments: [controller.userList[i].id]);
+                        },
+                        child: Card(
+                          elevation: 10,
+                          child: Center(child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightFifteen),
+                            child: Text(controller.userList[i].name ?? ""),
+                          )),
+                        ),
+                      ),
+                    ),
+                    Expanded(flex: 4,child: ElevatedButton(onPressed: (){showAlertDialogForDeleteUser("Delete user",i);}, child:const Text("Delete user"))),
+                  ],
                 );
               },
             ),
@@ -56,7 +64,6 @@ class UserListViewScreen extends GetView<UserListViewController> {
               children: [
                 ElevatedButton(onPressed: (){showAlertDialogForLogOut("Add user");}, child:const Text("Add user")),
                 ElevatedButton(onPressed: (){showAlertDialogForLogOut("Edit existing user details?");}, child:const Text("Edit user details")),
-                ElevatedButton(onPressed: (){showAlertDialogForLogOut("Delete user");}, child:const Text("Delete user")),
               ],
             )
           ],
@@ -95,6 +102,47 @@ class UserListViewScreen extends GetView<UserListViewController> {
                     children: [
                       ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
                       ElevatedButton(onPressed: (){Get.back();},child: const Text("Confirm"),)
+                    ],
+                  ),
+
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+  showAlertDialogForDeleteUser(String title,int id) {
+    Get.dialog(
+      barrierDismissible: false,
+      AlertDialog(
+        insetPadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.zero,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        content: Builder(
+          builder: (context) {
+            return Container(
+              height: ScreenConstant.screenHeightThird,
+              width: MediaQuery.of(context).size.width-80,
+              padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightTen,horizontal: ScreenConstant.defaultWidthThirty),
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(height: ScreenConstant.defaultHeightFifteen,),
+                  Text(title,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 20,fontWeight: FontWeight.w500),),
+                  Container(height: ScreenConstant.defaultHeightFifteen,),
+                  Text("Are you sure?",style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                  Container(height: ScreenConstant.defaultHeightTen,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
+                      ElevatedButton(onPressed: (){Get.back();controller.userList.removeAt(id);},child: const Text("Confirm"),)
                     ],
                   ),
 

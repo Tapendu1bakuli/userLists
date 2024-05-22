@@ -34,17 +34,27 @@ class AlbumViewScreen extends GetView<UserListViewController> {
             shrinkWrap: true,
             itemCount: controller.albumList.length,
             itemBuilder: (context, i) {
-              return InkWell(
-                onTap: (){
-                  Get.to(const PhotosViewScreen(),arguments: [controller.albumList[i].id]);
-                },
-                child: Card(
-                  elevation: 10,
-                  child: Center(child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightFifteen),
-                    child: Text(controller.albumList[i].title ?? ""),
-                  )),
-                ),
+              return Row(
+                children: [
+                  Expanded(
+                    flex:6,
+                    child: InkWell(
+                      onTap: (){
+                        Get.to(const PhotosViewScreen(),arguments: [controller.albumList[i].id]);
+                      },
+                      child: Card(
+                        elevation: 10,
+                        child: Center(child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightFifteen),
+                          child: Text(controller.albumList[i].title ?? ""),
+                        )),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      flex:4,
+                      child: ElevatedButton(onPressed: (){showAlertDialogForDelete("Delete album",i);}, child:const Text("Delete album"))),
+                ],
               );
             },
           ),
@@ -52,14 +62,11 @@ class AlbumViewScreen extends GetView<UserListViewController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
-                  onPressed: ()async{
-                    await modalBottomSheetMenuForCamera(context,(XFile? selectedImage){
-                      controller.temporaryDocImageName.value = selectedImage!.name;
-                      controller.temporaryDocImagePath.value = selectedImage!.path;
-                    });
+                  onPressed: (){
+                    showAlertDialogForLogOut("Edit album");
               }, child:const Text("Add new album")),
               ElevatedButton(onPressed: (){showAlertDialogForLogOut("Edit album");}, child:const Text("Edit album")),
-              ElevatedButton(onPressed: (){showAlertDialogForLogOut("Delete album");}, child:const Text("Delete album")),
+
             ],
           ),
           Container(height: ScreenConstant.defaultHeightFifteen,),
@@ -118,6 +125,47 @@ class AlbumViewScreen extends GetView<UserListViewController> {
                     children: [
                       ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
                       ElevatedButton(onPressed: (){Get.back();},child: const Text("Confirm"),)
+                    ],
+                  ),
+
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+  showAlertDialogForDelete(String title,int id) {
+    Get.dialog(
+      barrierDismissible: false,
+      AlertDialog(
+        insetPadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.zero,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        content: Builder(
+          builder: (context) {
+            return Container(
+              height: ScreenConstant.screenHeightThird,
+              width: MediaQuery.of(context).size.width-80,
+              padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightTen,horizontal: ScreenConstant.defaultWidthThirty),
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(height: ScreenConstant.defaultHeightFifteen,),
+                  Text(title,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 20,fontWeight: FontWeight.w500),),
+                  Container(height: ScreenConstant.defaultHeightFifteen,),
+                  Text("Are you sure?",style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                  Container(height: ScreenConstant.defaultHeightTen,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
+                      ElevatedButton(onPressed: (){Get.back();controller.albumList.removeAt(id);},child: const Text("Confirm"),)
                     ],
                   ),
 
