@@ -18,78 +18,94 @@ class AlbumViewScreen extends GetView<UserListViewController> {
         await controller.fetchAlbum(data[0]);
       });
     }, builder: (_) {
-    return Scaffold(
-    appBar: AppBar(
-    centerTitle: true,
-    title: Text(AppStrings.albumViewScreen.tr),
-    ),
-      body:  controller.isLoading.value?const Center(child: CircularProgressIndicator(),):ListView(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: controller.albumList.length,
-            itemBuilder: (context, i) {
-              return Row(
+      return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(AppStrings.albumViewScreen.tr),
+        ),
+        body: controller.isLoading.value
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView(
                 children: [
-                  Expanded(
-                    flex:6,
-                    child: InkWell(
-                      onTap: (){
-                        Get.to(const PhotosViewScreen(),arguments: [controller.albumList[i].id]);
-                      },
-                      child: Card(
-                        elevation: 10,
-                        child: Center(child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightFifteen),
-                          child: Text(controller.albumList[i].title ?? ""),
-                        )),
-                      ),
-                    ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.albumList.length,
+                    itemBuilder: (context, i) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            flex: 6,
+                            child: InkWell(
+                              onTap: () {
+                                Get.to(const PhotosViewScreen(),
+                                    arguments: [controller.albumList[i].id]);
+                              },
+                              child: Card(
+                                elevation: 10,
+                                child: Center(
+                                    child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          ScreenConstant.defaultHeightFifteen),
+                                  child:
+                                      Text(controller.albumList[i].title ?? ""),
+                                )),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              flex: 4,
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    showAlertDialogForDelete(
+                                        AppStrings.deleteAlbum.tr, i);
+                                  },
+                                  child: Text(AppStrings.deleteAlbum.tr))),
+                        ],
+                      );
+                    },
                   ),
-                  Expanded(
-                      flex:4,
-                      child: ElevatedButton(onPressed: (){showAlertDialogForDelete("Delete album",i);}, child:const Text("Delete album"))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            showAlertDialogForLogOut(AppStrings.editAlbum.tr);
+                          },
+                          child: Text(AppStrings.addNewAlbum.tr)),
+                      ElevatedButton(
+                          onPressed: () {
+                            showAlertDialogForLogOut(AppStrings.editAlbum.tr);
+                          },
+                          child: Text(AppStrings.editAlbum.tr)),
+                    ],
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  controller.temporaryDocImagePath.value.isEmpty
+                      ? const Offstage()
+                      : Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              height: ScreenConstant.defaultHeightTwoHundred,
+                              width: ScreenConstant.defaultWidthOneEighty,
+                              child: Image.file(
+                                fit: BoxFit.fill,
+                                File(controller.temporaryDocImagePath.value),
+                              ),
+                            ),
+                          ),
+                        )
                 ],
-              );
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                  onPressed: (){
-                    showAlertDialogForLogOut("Edit album");
-              }, child:const Text("Add new album")),
-              ElevatedButton(onPressed: (){showAlertDialogForLogOut("Edit album");}, child:const Text("Edit album")),
-
-            ],
-          ),
-          Container(height: ScreenConstant.defaultHeightFifteen,),
-        controller
-            .temporaryDocImagePath
-            .value.isEmpty?const Offstage():Center(
-            child: ClipRRect(
-              borderRadius:
-              BorderRadius.circular(20),
-              child: Container(
-                height: ScreenConstant
-                    .defaultHeightTwoHundred,
-                width: ScreenConstant
-                    .defaultWidthOneEighty,
-                child: Image.file(
-                  fit: BoxFit.fill,
-                  File(controller
-                      .temporaryDocImagePath
-                      .value),
-                ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
+      );
     });
   }
+
   showAlertDialogForLogOut(String title) {
     Get.dialog(
       barrierDismissible: false,
@@ -103,26 +119,51 @@ class AlbumViewScreen extends GetView<UserListViewController> {
           builder: (context) {
             return Container(
               height: ScreenConstant.screenHeightThird,
-              width: MediaQuery.of(context).size.width-80,
-              padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightTen,horizontal: ScreenConstant.defaultWidthThirty),
-
+              width: MediaQuery.of(context).size.width - 80,
+              padding: EdgeInsets.symmetric(
+                  vertical: ScreenConstant.defaultHeightTen,
+                  horizontal: ScreenConstant.defaultWidthThirty),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text(title,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 20,fontWeight: FontWeight.w500),),
-                  Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text("Are you sure?",style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
-                  Container(height: ScreenConstant.defaultHeightTen,),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  Text(
+                    title,
+                    style: TextStyles.homeTabSecondCardSubTitleStyleBold
+                        .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  Text(
+                    AppStrings.areYouSure.tr,
+                    style: TextStyles.homeTabSecondCardSubTitleStyleBold
+                        .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightTen,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Confirm"),)
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(AppStrings.cancel.tr),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(AppStrings.confirm.tr),
+                      )
                     ],
                   ),
-
                 ],
               ),
             );
@@ -131,7 +172,8 @@ class AlbumViewScreen extends GetView<UserListViewController> {
       ),
     );
   }
-  showAlertDialogForDelete(String title,int id) {
+
+  showAlertDialogForDelete(String title, int id) {
     Get.dialog(
       barrierDismissible: false,
       AlertDialog(
@@ -144,26 +186,52 @@ class AlbumViewScreen extends GetView<UserListViewController> {
           builder: (context) {
             return Container(
               height: ScreenConstant.screenHeightThird,
-              width: MediaQuery.of(context).size.width-80,
-              padding: EdgeInsets.symmetric(vertical: ScreenConstant.defaultHeightTen,horizontal: ScreenConstant.defaultWidthThirty),
-
+              width: MediaQuery.of(context).size.width - 80,
+              padding: EdgeInsets.symmetric(
+                  vertical: ScreenConstant.defaultHeightTen,
+                  horizontal: ScreenConstant.defaultWidthThirty),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text(title,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 20,fontWeight: FontWeight.w500),),
-                  Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text("Are you sure?",style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
-                  Container(height: ScreenConstant.defaultHeightTen,),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  Text(
+                    title,
+                    style: TextStyles.homeTabSecondCardSubTitleStyleBold
+                        .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightFifteen,
+                  ),
+                  Text(
+                    AppStrings.areYouSure.tr,
+                    style: TextStyles.homeTabSecondCardSubTitleStyleBold
+                        .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
+                  Container(
+                    height: ScreenConstant.defaultHeightTen,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
-                      ElevatedButton(onPressed: (){Get.back();controller.albumList.removeAt(id);},child: const Text("Confirm"),)
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(AppStrings.cancel.tr),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                          controller.albumList.removeAt(id);
+                        },
+                        child: Text(AppStrings.confirm.tr),
+                      )
                     ],
                   ),
-
                 ],
               ),
             );

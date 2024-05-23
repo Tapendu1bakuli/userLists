@@ -1,10 +1,9 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:users/app/modules/home/controller/taskTwoController.dart';
 import 'package:users/device_manager/screen_constants.dart';
+import 'package:users/utils/text_utils/app_strings.dart';
 import 'package:users/utils/utils.dart';
 
 import '../../../../utils/TextStyles.dart';
@@ -19,14 +18,14 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
       appBar: AppBar(
         backgroundColor: Colors.white10,
         centerTitle: true,
-        title: const Text("Task 2 view"),
+        title:  Text(AppStrings.task2View.tr),
       ),
       body: Padding(
         padding:
             EdgeInsets.symmetric(horizontal: ScreenConstant.defaultWidthTwenty),
         child: ListView(
           children: [
-            Text("Select Collection Date & Time",
+            Text(AppStrings.selectCollectionDateAndTime.tr,
                 style: TextStyles.textStyleRegular),
             Container(
               height: ScreenConstant.defaultHeightFifteen,
@@ -123,7 +122,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Morning", style: TextStyles.textStyleRegular.copyWith(fontSize:16)),
+                      Text(AppStrings.morning.tr, style: TextStyles.textStyleRegular.copyWith(fontSize:16)),
                       Container(
                         height: ScreenConstant.defaultHeightFifteen,
                       ),
@@ -141,7 +140,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
 
                               borderSide: const BorderSide(color: Colors.white),
                             ),
-                            hintText: "Select Date",
+                            hintText: AppStrings.selectDate.tr,
                             contentPadding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10)
                           ),
                           isExpanded: true,
@@ -175,7 +174,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Afternoon", style: TextStyles.textStyleRegular.copyWith(fontSize:16)),
+                      Text(AppStrings.afternoon.tr, style: TextStyles.textStyleRegular.copyWith(fontSize:16)),
                       Container(
                         height: ScreenConstant.defaultHeightFifteen,
                       ),
@@ -192,7 +191,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(color: Colors.white),
                             ),
-                            hintText: "Select Date",
+                            hintText: AppStrings.selectDate.tr,
 
                           ),
                           itemHeight: 60,
@@ -231,7 +230,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
             Container(
               height: ScreenConstant.defaultHeightFifteen,
             ),
-            Text("Select Delivery Date & Time",
+            Text(AppStrings.selectDeliveryDateAndTime.tr,
                 style: TextStyles.textStyleRegular),
             Container(
               height: ScreenConstant.defaultHeightFifteen,
@@ -249,7 +248,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                       return InkWell(
                         onTap: () {
                           if(controller.isCollectionSelected.value == false){
-                            showFailureSnackBar("Choose Collection date first", "Choose Collection date first");
+                            showFailureSnackBar(AppStrings.chooseCollectionFirst.tr, AppStrings.chooseCollectionFirst.tr);
                           }else{
                               for (var element in controller.collectionDates) {
                                 element.isColoured = false;
@@ -327,7 +326,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Morning", style: TextStyles.textStyleRegular.copyWith(fontSize:16)),
+                      Text(AppStrings.morning.tr, style: TextStyles.textStyleRegular.copyWith(fontSize:16)),
                       Container(
                         height: ScreenConstant.defaultHeightFifteen,
                       ),
@@ -370,7 +369,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                             controller.selectedLocation3?.value = val;
 
                           }else{
-                            showFailureSnackBar("", "Delivery date should be after collection");
+                            showFailureSnackBar("", AppStrings.deliveryTimeShouldBeAfterCollection.tr);
                           }
                         },
                       )
@@ -383,7 +382,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Afternoon", style: TextStyles.textStyleRegular.copyWith(fontSize:16)),
+                      Text(AppStrings.afternoon.tr, style: TextStyles.textStyleRegular.copyWith(fontSize:16)),
                       Container(
                         height: ScreenConstant.defaultHeightFifteen,
                       ),
@@ -423,7 +422,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                           controller.selectedLocation3 = val as RxString?;
 
                         }else{
-                          showFailureSnackBar("", "Delivery date should be after collection");
+                          showFailureSnackBar("", AppStrings.deliveryTimeShouldBeAfterCollection.tr);
                         }
                       },
                       )
@@ -443,19 +442,19 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.blueAccent.withOpacity(0.4)),
               width: Get.width,
-              child: const Text.rich(
+              child:  Text.rich(
                 textAlign: TextAlign.center,
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Note: ',
+                      text: AppStrings.note.tr,
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                     ),
                     TextSpan(
                       text:
-                          ' A delivery charge of £3.00 will be incurred for a full service',
-                      style: TextStyle(fontSize: 14),
+                          AppStrings.deliveryCharge.tr,
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ],
                 ),
@@ -472,11 +471,11 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                 elevation: 15.0,
               ),onPressed: () {
                 if(controller.firstTimeSlotsForCollection!=controller.firstTimeSlotsForDelivery && controller.validDateChoosen.value){
-                  showSuccessSnackbar("title", "Time choosen is valid");
+                  showSuccessSnackbar(AppStrings.title.tr, AppStrings.chooseAValid.tr);
                 }else {
-                  showFailureSnackBar("title", "Delivery time must be after collection time");
+                  showFailureSnackBar(AppStrings.title.tr, AppStrings.deliveryTimeShouldBeAfterCollection.tr);
                 }
-              }, child:  Text("Continue",style: TextStyle(color:controller.firstTimeSlotsForCollection!=controller.firstTimeSlotsForDelivery && controller.validDateChoosen.value? Colors.white:Colors.black),)),
+              }, child:  Text(AppStrings.continues.tr,style: TextStyle(color:controller.firstTimeSlotsForCollection!=controller.firstTimeSlotsForDelivery && controller.validDateChoosen.value? Colors.white:Colors.black),)),
             )
           ],
         ),

@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:users/app/modules/home/controller/userListViewController.dart';
-
+import 'package:users/utils/text_utils/app_strings.dart';
 import '../../../../device_manager/screen_constants.dart';
 import '../../../../utils/TextStyles.dart';
 import '../../../../utils/utils.dart';
@@ -23,7 +22,7 @@ class PhotosViewScreen extends GetView<UserListViewController> {
       return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          title: const Text("Photos view"),
+          title: Text(AppStrings.photosView.tr),
         ),
         body: controller.isLoading.value
             ? const Center(
@@ -53,9 +52,9 @@ class PhotosViewScreen extends GetView<UserListViewController> {
                                     flex: 4,
                                     child: ElevatedButton(
                                         onPressed: () {
-                                          showDialogForChooseImage("Delete", i);
+                                          showDialogForChooseImage(AppStrings.delete.tr, i);
                                         },
-                                        child: const Text("Delete album"))),
+                                        child: Text(AppStrings.deleteAlbum.tr))),
                               ],
                             ));
                       },
@@ -79,12 +78,12 @@ class PhotosViewScreen extends GetView<UserListViewController> {
                                     selectedImage!.path;
                               });
                             },
-                            child: const Text("Add new album"))
+                            child: Text(AppStrings.addNewAlbum.tr))
                         : ElevatedButton(
                             onPressed: () {
                               controller.temporaryDocImagePath.value = "";
                             },
-                            child: const Text("Delete")),
+                            child: Text(AppStrings.delete.tr)),
                     Container(
                       height: ScreenConstant.defaultHeightFifteen,
                     ),
@@ -143,7 +142,7 @@ class PhotosViewScreen extends GetView<UserListViewController> {
                     height: ScreenConstant.defaultHeightFifteen,
                   ),
                   Text(
-                    "Are you sure?",
+                    AppStrings.areYouSure.tr,
                     style: TextStyles.homeTabSecondCardSubTitleStyleBold
                         .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
@@ -158,13 +157,13 @@ class PhotosViewScreen extends GetView<UserListViewController> {
                         onPressed: () {
                           Get.back();
                         },
-                        child: const Text("Cancel"),
+                        child: Text( AppStrings.cancel.tr),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           Get.back();
                         },
-                        child: const Text("Confirm"),
+                        child: Text( AppStrings.confirm.tr),
                       )
                     ],
                   ),
@@ -210,7 +209,7 @@ class PhotosViewScreen extends GetView<UserListViewController> {
                     height: ScreenConstant.defaultHeightFifteen,
                   ),
                   Text(
-                    "Are you sure?",
+                    AppStrings.areYouSure.tr,
                     style: TextStyles.homeTabSecondCardSubTitleStyleBold
                         .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
@@ -225,14 +224,14 @@ class PhotosViewScreen extends GetView<UserListViewController> {
                         onPressed: () {
                           Get.back();
                         },
-                        child: const Text("Cancel"),
+                        child: Text( AppStrings.cancel.tr),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           Get.back();
                           controller.photosList.removeAt(id);
                         },
-                        child: const Text("Confirm"),
+                        child:  Text( AppStrings.confirm.tr),
                       )
                     ],
                   ),
