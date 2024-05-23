@@ -8,14 +8,33 @@ import 'package:intl/intl.dart';
 import '../../../models/dateTimeModel.dart';
 
 class TaskTwocontroller extends GetxController{
+  //Variables
   RxList<String> dates = <String>[].obs;
-  RxInt index1 = 0.obs;
-  RxInt index2 = 0.obs;
   RxBool isCollectionSelected = false.obs;
-  RxBool isMorning1 =false.obs;
-  RxBool isMorning2 =false.obs;
-  RxBool isAfter1 =false.obs;
-  RxBool isAfter2 =false.obs;
+  RxList<DateTimeModel> deliveryDates = [
+    DateTimeModel(isColoured: false,title: "Today",subTitle: "20 Dec",ontap: (){}),
+    DateTimeModel(isColoured: false,title: "Tomorrow",subTitle: "21 Dec",ontap: (){}),
+    DateTimeModel(isColoured: false,title: "Select Date",subTitle: "20 Dec",ontap: (){})
+  ].obs;
+  RxList<DateTimeModel> collectionDates = [
+    DateTimeModel(isColoured: false,title: "Today",subTitle: "20 Dec",ontap: (){}),
+    DateTimeModel(isColoured: false,title: "Tomorrow",subTitle: "21 Dec",ontap: (){}),
+    DateTimeModel(isColoured: false,title: "Select Date",subTitle: "20 Dec",ontap: (){})
+  ].obs;
+  RxList<String> morningTimeSlots = ['Select Date','9.00am-10.0am', '10.00am-11.00am', '11.00am-12.00am'].obs;
+  RxList<String> afternoonTestSlots = ['Select Date','01.00pm-02.00pm', '02.00pm-03.00pm', '03.00pm-04.00pm'].obs;
+  RxString? selectedLocation = "Select Date".obs;
+  RxString? selectedLocation1 = "Select Date".obs;
+  RxString? selectedLocation3 = "Select Date".obs;
+  RxString? selectedLocation4 = "Select Date".obs;
+  RxString collectionDate = "".obs;
+  RxString collectionTimeSlot = "".obs;
+  RxString deliveryDate = "".obs;
+  RxString deliveryTimeSlot = "".obs;
+  late DateTime firstTimeSlotsForCollection;
+  late DateTime firstTimeSlotsForDelivery;
+  RxBool validDateChoosen = false.obs;
+
   String convertDateFormat(String inputDateStr) {
     // Parse the input date string
     DateTime inputDate = DateFormat('yyyy-MM-dd').parse(inputDateStr);
@@ -25,64 +44,7 @@ class TaskTwocontroller extends GetxController{
 
     return formattedDate;
   }
-  List<String> getDates() {
-
-    // Get today's date
-    DateTime now = DateTime.now();
-    String today = DateFormat('yyyy-MM-dd').format(now);
-    dates.add(today);
-
-    // Get tomorrow's date
-    DateTime tomorrow = now.add(Duration(days: 1));
-    String tomorrowDate = DateFormat('yyyy-MM-dd').format(tomorrow);
-    dates.add(tomorrowDate);
-
-    // Get the day after tomorrow's date
-    DateTime dayAfterTomorrow = now.add(Duration(days: 2));
-    String dayAfterTomorrowDate = DateFormat('yyyy-MM-dd').format(dayAfterTomorrow);
-    dates.add(dayAfterTomorrowDate);
-
-    return dates;
-  }
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-    firstTimeSlotsForCollection = DateTime.now();
-    firstTimeSlotsForDelivery = DateTime.now();
-    getDates();
-  }
-RxList<DateTimeModel> deliveryDates = [
-  DateTimeModel(isColoured: false,title: "Today",subTitle: "20 Dec",ontap: (){}),
-  DateTimeModel(isColoured: false,title: "Tomorrow",subTitle: "21 Dec",ontap: (){}),
-  DateTimeModel(isColoured: false,title: "Select Date",subTitle: "20 Dec",ontap: (){})
-].obs;
-RxList<DateTimeModel> collectionDates = [
-  DateTimeModel(isColoured: false,title: "Today",subTitle: "20 Dec",ontap: (){}),
-  DateTimeModel(isColoured: false,title: "Tomorrow",subTitle: "21 Dec",ontap: (){}),
-  DateTimeModel(isColoured: false,title: "Select Date",subTitle: "20 Dec",ontap: (){})
-].obs;
-
-RxList<String> morningTimeSlots = ['Select Date','9.00am-10.0am', '10.00am-11.00am', '11.00am-12.00am'].obs;
-RxList<String> afternoonTestSlots = ['Select Date','01.00pm-02.00pm', '02.00pm-03.00pm', '03.00pm-04.00pm'].obs;
-
-
-RxString? selectedLocation = "Select Date".obs;
-RxString? selectedLocation1 = "Select Date".obs;
-RxString? selectedLocation3 = "Select Date".obs;
-RxString? selectedLocation4 = "Select Date".obs;
-
-
- RxString collectionDate = "".obs;
- RxString collectionTimeSlot = "".obs;
-  RxString deliveryDate = "".obs;
-  RxString deliveryTimeSlot = "".obs;
-
- late DateTime firstTimeSlotsForCollection;
- late DateTime firstTimeSlotsForDelivery;
-
- RxBool validDateChoosen = false.obs;
-//create time stamp
+  //create time stamp for get the difference
   DateTime createTimestamp(String dateStr, String timeStr) {
     print("DATE:$dateStr");
     print("TIME:$timeStr");
@@ -126,4 +88,35 @@ RxString? selectedLocation4 = "Select Date".obs;
       timestampTime.hour,
       timestampTime.minute,
     );
-  }}
+  }
+  //Get 3 dates in a list
+  List<String> getDates() {
+
+    // Get today's date
+    DateTime now = DateTime.now();
+    String today = DateFormat('yyyy-MM-dd').format(now);
+    dates.add(today);
+
+    // Get tomorrow's date
+    DateTime tomorrow = now.add(const Duration(days: 1));
+    String tomorrowDate = DateFormat('yyyy-MM-dd').format(tomorrow);
+    dates.add(tomorrowDate);
+
+    // Get the day after tomorrow's date
+    DateTime dayAfterTomorrow = now.add(const Duration(days: 2));
+    String dayAfterTomorrowDate = DateFormat('yyyy-MM-dd').format(dayAfterTomorrow);
+    dates.add(dayAfterTomorrowDate);
+
+    return dates;
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    firstTimeSlotsForCollection = DateTime.now();
+    firstTimeSlotsForDelivery = DateTime.now();
+    getDates();
+  }
+
+}

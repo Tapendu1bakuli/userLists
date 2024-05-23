@@ -14,8 +14,6 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
 
   @override
   Widget build(BuildContext context) {
-print(controller.firstTimeSlotsForCollection);
-print(controller.firstTimeSlotsForDelivery);
     return Scaffold(
       backgroundColor: Colors.white10.withOpacity(0.9),
       appBar: AppBar(
@@ -47,12 +45,14 @@ print(controller.firstTimeSlotsForDelivery);
                         onTap: () {
                           controller.validDateChoosen.value = false;
                           controller.isCollectionSelected.value = true;
-                            controller.deliveryDates
-                                .forEach((element) => element.isColoured = false);
+                            for (var element in controller.deliveryDates) {
+                              element.isColoured = false;
+                            }
                             controller.deliveryDates[index].isColoured =
                             !controller.deliveryDates[index].isColoured!;
-                          controller.collectionDates
-                              .forEach((element) => element.isColoured = false);
+                          for (var element in controller.collectionDates) {
+                            element.isColoured = false;
+                          }
                             controller.deliveryDates.refresh();
                             controller.collectionDates.refresh();
                             controller.deliveryDates[index].ontap!();
@@ -129,24 +129,24 @@ print(controller.firstTimeSlotsForDelivery);
                       ),
                       Obx(()=> DropdownButtonFormField(
                           decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+                            suffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
                             filled: true,
                             fillColor: Colors.white,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: const BorderSide(color: Colors.white),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
 
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: const BorderSide(color: Colors.white),
                             ),
                             hintText: "Select Date",
-                            contentPadding: EdgeInsets.symmetric(vertical: 15,horizontal: 10)
+                            contentPadding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10)
                           ),
                           isExpanded: true,
                           iconSize: 0.0,
-                          style: TextStyle(color: Colors.black54,height: 0.1),
+                          style: const TextStyle(color: Colors.black54,height: 0.1),
                           items: controller.morningTimeSlots.map(
                                 (val) {
                               return DropdownMenuItem<String>(
@@ -181,16 +181,16 @@ print(controller.firstTimeSlotsForDelivery);
                       ),
                       Obx(()=> DropdownButtonFormField(
                           decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+                            suffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
                             filled: true,
                             fillColor: Colors.white,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: const BorderSide(color: Colors.white),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: const BorderSide(color: Colors.white),
                             ),
                             hintText: "Select Date",
 
@@ -198,7 +198,7 @@ print(controller.firstTimeSlotsForDelivery);
                           itemHeight: 60,
                           isExpanded: true,
                           iconSize: 0.0,
-                          style: TextStyle(color: Colors.black54,height: 0.1),
+                          style: const TextStyle(color: Colors.black54,height: 0.1),
                           items: controller.afternoonTestSlots.map(
                                 (val) {
                               return DropdownMenuItem<String>(
@@ -251,8 +251,9 @@ print(controller.firstTimeSlotsForDelivery);
                           if(controller.isCollectionSelected.value == false){
                             showFailureSnackBar("Choose Collection date first", "Choose Collection date first");
                           }else{
-                              controller.collectionDates
-                                  .forEach((element) => element.isColoured = false);
+                              for (var element in controller.collectionDates) {
+                                element.isColoured = false;
+                              }
                               controller.collectionDates[index].isColoured =
                               !controller.collectionDates[index].isColoured!;
                               controller.collectionDates.refresh();
@@ -332,17 +333,17 @@ print(controller.firstTimeSlotsForDelivery);
                       ),
                       DropdownButtonFormField(
                         decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+                          suffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
                           filled: true,
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: Colors.white),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
 
-                            borderSide: BorderSide(color: Color(0xFFD9D9D9)),
+                            borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
                           ),
                           hintText: controller.selectedLocation3!.value,
 
@@ -350,7 +351,7 @@ print(controller.firstTimeSlotsForDelivery);
 
                         isExpanded: true,
                         iconSize: 0.0,
-                        style: TextStyle(color: Colors.black54,height: 0.1),
+                        style: const TextStyle(color: Colors.black54,height: 0.1),
                         items: controller.morningTimeSlots.map(
                               (val) {
                             return DropdownMenuItem<String>(
@@ -388,24 +389,24 @@ print(controller.firstTimeSlotsForDelivery);
                       ),
                       DropdownButtonFormField(
                         decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+                          suffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
                           filled: true,
                           fillColor: Colors.white,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: const BorderSide(color: Colors.white),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
 
-                            borderSide: BorderSide(color: Color(0xFFD9D9D9)),
+                            borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
                           ),
                           hintText: controller.selectedLocation3!.value,
                         ),
 
                         isExpanded: true,
                         iconSize: 0.0,
-                        style: TextStyle(color: Colors.black54,height: 0.1),
+                        style: const TextStyle(color: Colors.black54,height: 0.1),
                         items: controller.afternoonTestSlots.map(
                               (val) {
                             return DropdownMenuItem<String>(
@@ -472,8 +473,9 @@ print(controller.firstTimeSlotsForDelivery);
               ),onPressed: () {
                 if(controller.firstTimeSlotsForCollection!=controller.firstTimeSlotsForDelivery && controller.validDateChoosen.value){
                   showSuccessSnackbar("title", "Time choosen is valid");
-                }else
+                }else {
                   showFailureSnackBar("title", "Delivery time must be after collection time");
+                }
               }, child:  Text("Continue",style: TextStyle(color:controller.firstTimeSlotsForCollection!=controller.firstTimeSlotsForDelivery && controller.validDateChoosen.value? Colors.white:Colors.black),)),
             )
           ],

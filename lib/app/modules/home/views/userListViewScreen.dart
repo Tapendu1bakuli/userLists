@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:users/app/modules/home/views/albumsViewScreen.dart';
 import 'package:users/device_manager/screen_constants.dart';
 import 'package:users/utils/colors/app_colors.dart';
@@ -54,7 +53,7 @@ class UserListViewScreen extends GetView<UserListViewController> {
                         ),
                       ),
                     ),
-                    Expanded(flex: 4,child: ElevatedButton(onPressed: (){showAlertDialogForDeleteUser("Delete user",i);}, child:const Text("Delete user"))),
+                    Expanded(flex: 4,child: ElevatedButton(onPressed: (){showAlertDialogForDeleteUser(AppStrings.deleteUser.tr,i);}, child: Text(AppStrings.deleteUser.tr))),
                   ],
                 );
               },
@@ -62,8 +61,8 @@ class UserListViewScreen extends GetView<UserListViewController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(onPressed: (){showAlertDialogForLogOut("Add user");}, child:const Text("Add user")),
-                ElevatedButton(onPressed: (){showAlertDialogForLogOut("Edit existing user details?");}, child:const Text("Edit user details")),
+                ElevatedButton(onPressed: (){showAlertDialogForLogOut(AppStrings.addUser.tr);}, child: Text(AppStrings.addUser.tr)),
+                ElevatedButton(onPressed: (){showAlertDialogForLogOut(AppStrings.editExistingUser.tr);}, child: Text(AppStrings.editUserDetails.tr)),
               ],
             )
           ],
@@ -95,13 +94,13 @@ class UserListViewScreen extends GetView<UserListViewController> {
                   Container(height: ScreenConstant.defaultHeightFifteen,),
                   Text(title,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 20,fontWeight: FontWeight.w500),),
                   Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text("Are you sure?",style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                  Text(AppStrings.areYouSure.tr,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
                   Container(height: ScreenConstant.defaultHeightTen,),
                    Row(
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Confirm"),)
+                      ElevatedButton(onPressed: (){Get.back();},child:  Text(AppStrings.cancel.tr),),
+                      ElevatedButton(onPressed: (){Get.back();},child:  Text(AppStrings.confirm.tr),)
                     ],
                   ),
 
@@ -136,13 +135,13 @@ class UserListViewScreen extends GetView<UserListViewController> {
                   Container(height: ScreenConstant.defaultHeightFifteen,),
                   Text(title,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 20,fontWeight: FontWeight.w500),),
                   Container(height: ScreenConstant.defaultHeightFifteen,),
-                  Text("Are you sure?",style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                  Text(AppStrings.areYouSure.tr,style: TextStyles.homeTabSecondCardSubTitleStyleBold.copyWith(fontSize: 18,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
                   Container(height: ScreenConstant.defaultHeightTen,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ElevatedButton(onPressed: (){Get.back();},child: const Text("Cancel"),),
-                      ElevatedButton(onPressed: (){Get.back();controller.userList.removeAt(id);},child: const Text("Confirm"),)
+                      ElevatedButton(onPressed: (){Get.back();},child: Text(AppStrings.cancel.tr),),
+                      ElevatedButton(onPressed: (){Get.back();controller.userList.removeAt(id);},child: Text(AppStrings.cancel.tr),)
                     ],
                   ),
 

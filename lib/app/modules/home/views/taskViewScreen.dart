@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:users/utils/text_utils/app_strings.dart';
 
 import '../../../routes/routes.dart';
 
@@ -18,12 +19,12 @@ class TaskViewScreen extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(Routes.ROOT);
                 },
-                child: const Text("Task-1")),
+                child: Text(AppStrings.task1.tr)),
             ElevatedButton(
                 onPressed: () {
                   Get.toNamed(Routes.TASK2);
                 },
-                child: const Text("Task-2")),
+                child: Text(AppStrings.task2.tr)),
           ],
         ),
       ),

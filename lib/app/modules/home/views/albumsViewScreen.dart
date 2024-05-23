@@ -1,15 +1,10 @@
 import 'dart:io';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:users/app/modules/home/views/photosViewScreen.dart';
-
+import 'package:users/utils/text_utils/app_strings.dart';
 import '../../../../device_manager/screen_constants.dart';
 import '../../../../utils/TextStyles.dart';
-import '../../../../utils/utils.dart';
 import '../controller/userListViewController.dart';
 
 class AlbumViewScreen extends GetView<UserListViewController> {
@@ -26,7 +21,7 @@ class AlbumViewScreen extends GetView<UserListViewController> {
     return Scaffold(
     appBar: AppBar(
     centerTitle: true,
-    title: const Text("Album view screen"),
+    title: Text(AppStrings.albumViewScreen.tr),
     ),
       body:  controller.isLoading.value?const Center(child: CircularProgressIndicator(),):ListView(
         children: [
