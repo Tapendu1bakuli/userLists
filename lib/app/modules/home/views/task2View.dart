@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:users/app/modules/home/controller/taskTwoController.dart';
 import 'package:users/device_manager/screen_constants.dart';
 import 'package:users/utils/utils.dart';
@@ -13,6 +14,8 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
 
   @override
   Widget build(BuildContext context) {
+print(controller.firstTimeSlotsForCollection);
+print(controller.firstTimeSlotsForDelivery);
     return Scaffold(
       backgroundColor: Colors.white10.withOpacity(0.9),
       appBar: AppBar(
@@ -38,25 +41,22 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: controller.dateList.length,
+                    itemCount: controller.deliveryDates.length,
                     itemBuilder: (BuildContext context, int index) {
                       return InkWell(
                         onTap: () {
+                          controller.validDateChoosen.value = false;
                           controller.isCollectionSelected.value = true;
-                          print(controller.index1.value);
-                          print(controller.index2.value);
-                          controller.index1.value = index;
-
-                          print(controller.index1.value);
-                          print(controller.index2.value);
-                            controller.dateList
+                            controller.deliveryDates
                                 .forEach((element) => element.isColoured = false);
-                            debugPrint("index:$index");
-                            controller.dateList[index].isColoured =
-                            !controller.dateList[index].isColoured!;
-                            controller.dateList.refresh();
-                            controller.dateList[index].ontap!();
-
+                            controller.deliveryDates[index].isColoured =
+                            !controller.deliveryDates[index].isColoured!;
+                          controller.collectionDates
+                              .forEach((element) => element.isColoured = false);
+                            controller.deliveryDates.refresh();
+                            controller.collectionDates.refresh();
+                            controller.deliveryDates[index].ontap!();
+                            controller.collectionDate.value = controller.dates[index] ?? "";
 
                         },
                         child: Container(
@@ -64,7 +64,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                           width: ScreenConstant.defaultWidthNinetyEight,
                           decoration: BoxDecoration(
                               color:
-                                  controller.dateList[index].isColoured ?? false
+                                  controller.deliveryDates[index].isColoured ?? false
                                       ? Colors.blueAccent
                                       : Colors.white,
                               borderRadius: BorderRadius.circular(10),
@@ -82,18 +82,18 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                controller.dateList[index].title ?? "",
+                                controller.deliveryDates[index].title ?? "",
                                 style: TextStyles.hintTextStyle.copyWith(
                                     color:
-                                        controller.dateList[index].isColoured ??
+                                        controller.deliveryDates[index].isColoured ??
                                                 false
                                             ? Colors.white
                                             : Colors.black),
                               ),
-                              Text(controller.dates[index],
+                              Text(controller.convertDateFormat(controller.dates[index]),
                                   style: TextStyles.hintTextStyle.copyWith(
                                       color: controller
-                                                  .dateList[index].isColoured ??
+                                                  .deliveryDates[index].isColoured ??
                                               false
                                           ? Colors.white
                                           : Colors.black,
@@ -127,44 +127,44 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                       Container(
                         height: ScreenConstant.defaultHeightFifteen,
                       ),
-                      DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-                          filled: true,
-                          fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      Obx(()=> DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
 
-                            borderSide: BorderSide(color: Colors.white),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            hintText: "Select Date",
+                            contentPadding: EdgeInsets.symmetric(vertical: 15,horizontal: 10)
                           ),
-                          hintText: "Select date",
-                          contentPadding: EdgeInsets.symmetric(vertical: 15,horizontal: 10)
-                        ),
-                        isExpanded: true,
-                        iconSize: 0.0,
-                        style: TextStyle(color: Colors.black54,height: 0.1),
-                        items: ['9.00am-10.0am', '10.00am-11.00am', '11.00am-12.00am'].map(
-                              (val) {
-                            return DropdownMenuItem<String>(
-                              onTap: (){
-                                print(controller.selectedLocation?.value);
-                                print(controller.selectedLocation1?.value);
-                              },
-                              value: val,
-                              child: Text(val),
-                            );
+                          isExpanded: true,
+                          iconSize: 0.0,
+                          style: TextStyle(color: Colors.black54,height: 0.1),
+                          items: controller.morningTimeSlots.map(
+                                (val) {
+                              return DropdownMenuItem<String>(
+                                value: val,
+                                child: Text(val),
+                              );
+                            },
+                          ).toList(),
+                          onChanged: (String? val) {
+                            controller.selectedLocation?.value = val!;
+                            controller.selectedLocation1?.value = controller.afternoonTestSlots[0];
+
+
+                            controller.collectionTimeSlot.value = val!;
+                            controller.firstTimeSlotsForCollection = controller.createTimestamp(controller.collectionDate.value, controller.collectionTimeSlot.value);
+                            print("TimeStamp:${controller.firstTimeSlotsForCollection}");
                           },
-                        ).toList(),
-                        onChanged: (String? val) {
-                          controller.selectedLocation?.value = val!;
-                          controller.selectedLocation1 = null;
-                         print(controller.selectedLocation?.value);
-                         print(controller.selectedLocation1?.value);
-                        },
+                        ),
                       )
                     ],
                   ),
@@ -179,41 +179,49 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                       Container(
                         height: ScreenConstant.defaultHeightFifteen,
                       ),
-                      DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
-                          filled: true,
-                          fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          hintText: "Select date",
+                      Obx(()=> DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            hintText: "Select Date",
 
-                        ),
-                        itemHeight: 60,
-                        isExpanded: true,
-                        iconSize: 0.0,
-                        style: TextStyle(color: Colors.black54,height: 0.1),
-                        items: ['9.00am-10.0am', '10.00am-11.00am', '11.00am-12.00am'].map(
-                              (val) {
-                            return DropdownMenuItem<String>(
-                              alignment: AlignmentDirectional.center,
-                              value: val,
-                              child: Text(val),
-                            );
+                          ),
+                          itemHeight: 60,
+                          isExpanded: true,
+                          iconSize: 0.0,
+                          style: TextStyle(color: Colors.black54,height: 0.1),
+                          items: controller.afternoonTestSlots.map(
+                                (val) {
+                              return DropdownMenuItem<String>(
+                                alignment: AlignmentDirectional.center,
+                                value: val,
+                                child: Text(val),
+                              );
+                            },
+                          ).toList(),
+                          onChanged: (String? val) {
+                            controller.selectedLocation?.value = controller.afternoonTestSlots[0];
+                            controller.afternoonTestSlots.refresh();
+                            controller.selectedLocation1?.value = val!;
+
+
+
+                            controller.collectionTimeSlot.value = val!;
+                            print(controller.selectedLocation?.value);
+                            print(controller.selectedLocation1?.value);
+                            controller.firstTimeSlotsForCollection = controller.createTimestamp(controller.collectionDate.value, controller.collectionTimeSlot.value);
+                            print("TimeStamp:${controller.firstTimeSlotsForCollection}");
                           },
-                        ).toList(),
-                        onChanged: (String? val) {
-                          controller.selectedLocation = null;
-                          controller.selectedLocation1?.value = val.toString();
-                          print(controller.selectedLocation?.value);
-                          print(controller.selectedLocation1?.value);
-                        },
+                        ),
                       )
                     ],
                   ),
@@ -236,25 +244,20 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: controller.dateList1.length,
+                    itemCount: controller.collectionDates.length,
                     itemBuilder: (BuildContext context, int index) {
                       return InkWell(
                         onTap: () {
                           if(controller.isCollectionSelected.value == false){
                             showFailureSnackBar("Choose Collection date first", "Choose Collection date first");
                           }else{
-                            controller.index2.value = index;
-                            print(index);
-                            print(controller.index1.value);
-                            if(index > 0 && index > controller.index1.value){
-                              controller.dateList1
+                              controller.collectionDates
                                   .forEach((element) => element.isColoured = false);
-                              debugPrint("index:$index");
-                              controller.dateList1[index].isColoured =
-                              !controller.dateList1[index].isColoured!;
-                              controller.dateList1.refresh();
-                              controller.dateList1[index].ontap!();
-                            }
+                              controller.collectionDates[index].isColoured =
+                              !controller.collectionDates[index].isColoured!;
+                              controller.collectionDates.refresh();
+                              controller.collectionDates[index].ontap!();
+                              controller.deliveryDate.value = controller.dates[index];
                           }
 
 
@@ -263,7 +266,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                           height: ScreenConstant.defaultHeightNinety,
                           width: ScreenConstant.defaultWidthNinetyEight,
                           decoration: BoxDecoration(
-                              color: controller.dateList1[index].isColoured ??
+                              color: controller.collectionDates[index].isColoured ??
                                       false
                                   ? Colors.blueAccent
                                   : Colors.white,
@@ -282,17 +285,17 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                controller.dateList1[index].title ?? "",
+                                controller.collectionDates[index].title ?? "",
                                 style: TextStyles.hintTextStyle.copyWith(
                                     color: controller
-                                                .dateList1[index].isColoured ??
+                                                .collectionDates[index].isColoured ??
                                             false
                                         ? Colors.white
                                         : Colors.black),
                               ),
-                              Text(controller.dates[index],
+                              Text(controller.convertDateFormat(controller.dates[index]),
                                   style: TextStyles.hintTextStyle.copyWith(
-                                      color: controller.dateList1[index]
+                                      color: controller.collectionDates[index]
                                                   .isColoured ??
                                               false
                                           ? Colors.white
@@ -348,7 +351,7 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                         isExpanded: true,
                         iconSize: 0.0,
                         style: TextStyle(color: Colors.black54,height: 0.1),
-                        items: ['9.00am-10.0am', '10.00am-11.00am', '11.00am-12.00am'].map(
+                        items: controller.morningTimeSlots.map(
                               (val) {
                             return DropdownMenuItem<String>(
                               alignment: AlignmentDirectional.center,
@@ -358,10 +361,15 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                           },
                         ).toList(),
                         onChanged: (val) {
-                          if(controller.index1.value == controller.index2.value){
-                            showFailureSnackBar("", "Delivery date should be after collection");
+                          controller.deliveryTimeSlot.value = val!;
+                          controller.firstTimeSlotsForDelivery = controller.createTimestamp(controller.deliveryDate.value, controller.deliveryTimeSlot.value);
+                          print("TimeStamp:${controller.firstTimeSlotsForDelivery}");
+                          if(controller.firstTimeSlotsForDelivery.isAfter(controller.firstTimeSlotsForCollection)){
+                            controller.validDateChoosen.value = true;
+                            controller.selectedLocation3?.value = val;
+
                           }else{
-                            controller.selectedLocation3 = val as RxString?;
+                            showFailureSnackBar("", "Delivery date should be after collection");
                           }
                         },
                       )
@@ -392,14 +400,13 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
 
                             borderSide: BorderSide(color: Color(0xFFD9D9D9)),
                           ),
-                          hintText: controller.selectedLocation4!.value,
-
+                          hintText: controller.selectedLocation3!.value,
                         ),
 
                         isExpanded: true,
                         iconSize: 0.0,
                         style: TextStyle(color: Colors.black54,height: 0.1),
-                        items: ['9.00am-10.0am', '10.00am-11.00am', '11.00am-12.00am'].map(
+                        items: controller.afternoonTestSlots.map(
                               (val) {
                             return DropdownMenuItem<String>(
                               alignment: AlignmentDirectional.center,
@@ -407,14 +414,17 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
                               child: Text(val),
                             );
                           },
-                        ).toList(), onChanged: (String? value) {  },
-                        // onChanged: (val) {
-                        //   if(controller.index1.value == controller.index2.value){
-                        //     showFailureSnackBar("", "Delivery date should be after collection");
-                        //   }else{
-                        //     //controller.selectedLocation4?.value = val.toString();
-                        //   }
-                        // },
+                        ).toList(), onChanged: (String? val) {
+                        controller.firstTimeSlotsForDelivery = controller.createTimestamp(controller.deliveryDate.value, controller.deliveryTimeSlot.value);
+                        print("TimeStamp:${controller.firstTimeSlotsForDelivery}");
+                        if(controller.firstTimeSlotsForDelivery.isAfter(controller.firstTimeSlotsForCollection)){
+                          controller.validDateChoosen.value = true;
+                          controller.selectedLocation3 = val as RxString?;
+
+                        }else{
+                          showFailureSnackBar("", "Delivery date should be after collection");
+                        }
+                      },
                       )
                     ],
                   ),
@@ -453,14 +463,19 @@ class TaskTwoViewScreen extends GetView<TaskTwocontroller> {
             Container(
               height: ScreenConstant.screenHeightSeventh,
             ),
-            ElevatedButton(style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.pinkAccent,//change background color of button
-              backgroundColor: Colors.blueAccent,//change text color of button
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
-              ),
-              elevation: 15.0,
-            ),onPressed: () {}, child: const Text("Continue",style: TextStyle(color: Colors.white),))
+            Obx(()=> ElevatedButton(style: ElevatedButton.styleFrom(//change background color of button
+                backgroundColor:controller.firstTimeSlotsForCollection!=controller.firstTimeSlotsForDelivery && controller.validDateChoosen.value?Colors.blueAccent:Colors.white30,//change text color of button
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                elevation: 15.0,
+              ),onPressed: () {
+                if(controller.firstTimeSlotsForCollection!=controller.firstTimeSlotsForDelivery && controller.validDateChoosen.value){
+                  showSuccessSnackbar("title", "Time choosen is valid");
+                }else
+                  showFailureSnackBar("title", "Delivery time must be after collection time");
+              }, child:  Text("Continue",style: TextStyle(color:controller.firstTimeSlotsForCollection!=controller.firstTimeSlotsForDelivery && controller.validDateChoosen.value? Colors.white:Colors.black),)),
+            )
           ],
         ),
       ),
